@@ -1,53 +1,99 @@
-﻿<header>
-    <div class="content-wrapper">
-        <div class="float-left">
-            <p class="site-title">
-                <a href="~/">ASP.NET Web API</a></p>
+﻿
+
+<div class="bubble" id="canvasBubbles"></div>
+<div class="container" id="wrapper">
+    <div class="content">
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="page-header">
+                    <!--<h1>Bubble Soon <small>is coming soon..</small></h1>-->
+                    <!---->
+                    <h2>Rebind Ebook Converter
+                    </h2>
+                    <span>Powered by Calibre</span>
+                </div>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="span6">
+                <h2>Rebind Ebook Converter</h2>
+                <p>Here, we are working hard to launch a new site that's going to revolutionize the way you do business.</p>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec sapien risus. 
+                    Quisque posuere dolor a eros lacinia vitae pretium turpis iaculis. In sodales sollicitudin dolor et ullamcorper. 
+                    Curabitur varius bibendum turpis, vitae rutrum ligula.
+                </p>
+            </div>
+            <div class="span6">
+                <h4 class="t-right">Leave us your email below,
+                    <br />
+                    and we'll notify you when our launch.</h4>
+                <br />
+                @using Rebind                @model Rebind.Models.ConversionOptions
+                @using (Html.BeginForm("Index", "Home", FormMethod.Post, new { @class = "form-inline pull-right", enctype = "multipart/form-data" }))
+                {
+                    <input type="hidden" id="guid" name="Guid" value="@Model.Guid"/>
+ 
+                    <input type="file" placeholder="Select your ebook" name="EbookFile" class="input-text input-large" />
+                    <select name="extension">
+                        <option value="@OutputExtension.Epub.Value()">@OutputExtension.Epub.Name()</option>
+                        <option value="@OutputExtension.Html.Value()">@OutputExtension.Html.Name()</option>
+                        <option value="@OutputExtension.Lit.Value()">@OutputExtension.Lit.Name()</option>
+                        <option value="@OutputExtension.Mobi.Value()">@OutputExtension.Mobi.Name()</option>
+                        <option value="@OutputExtension.Pdb.Value()">@OutputExtension.Pdb.Name()</option>
+                        <option value="@OutputExtension.Pdf.Value()">@OutputExtension.Pdf.Name()</option>
+                        <option value="@OutputExtension.Rtf.Value()">@OutputExtension.Rtf.Name()</option>
+                        <option value="@OutputExtension.Txt.Value()">@OutputExtension.Txt.Name()</option>
+                    </select>
+                    <input type="submit" name="submit" value="Convert" class="btn btn-inverse btn-large" />
+                }
+
+            </div>
+        </div>
+        <div class="row-fluid footer">
+            <div class="span12">&copy; 2012 Bubble Soon. All right reserved.</div>
         </div>
     </div>
-</header>
-<div id="body">
-    <section class="featured">
-        <div class="content-wrapper">
-            <hgroup class="title">
-                <h1>Welcome to ASP.NET Web API!</h1>
-                <h2>Modify the code in this template to jump-start your ASP.NET Web API development.</h2>
-            </hgroup>
-            <p>
-                ASP.NET Web API allows you to expose your applications, data and services to the
-                web directly over HTTP.
-            </p>
-            <p>
-                To learn more about ASP.NET Web API visit
-                <a href="http://go.microsoft.com/fwlink/?LinkID=238195" title="ASP.NET Web API Website">http://asp.net/web-api</a>.
-                The page features <mark>videos, tutorials, and samples</mark> to help you get the most from ASP.NET Web API.
-                If you have any questions about ASP.NET Web API, visit
-                <a href="http://go.microsoft.com/fwlink/?LinkID=238196" title="ASP.NET Web API Forum">our forums</a>.
-            </p>
-        </div>
-    </section>
-    <section class="content-wrapper main-content clear-fix">
-        <h3>We suggest the following steps:</h3>
-        <ol class="round">
-            <li class="one">
-                <h5>Getting Started</h5>
-                ASP.NET Web API is a framework that makes it easy to build HTTP services that reach
-                a broad range of clients, including browsers and mobile devices. ASP.NET Web API
-                is an ideal platform for building RESTful applications on the .NET Framework.
-                <a href="http://go.microsoft.com/fwlink/?LinkId=245160">Learn more…</a>
-            </li>
-
-            <li class="two">
-                <h5>Add NuGet packages and jump-start your coding</h5>
-                NuGet makes it easy to install and update free libraries and tools.
-                <a href="http://go.microsoft.com/fwlink/?LinkId=245161">Learn more…</a>
-            </li>
-            <li class="three">
-                <h5>Find Web Hosting</h5>
-                You can easily find a web hosting company that offers the right mix of features
-                and price for your applications.
-                <a href="http://go.microsoft.com/fwlink/?LinkId=245164">Learn more…</a>
-            </li>
-        </ol>
-    </section>
 </div>
+
+
+@section Script
+{
+    <script type="text/javascript">
+    $(function () {
+        
+        
+
+        var subscriptionId = '@Model.Guid';
+        var convertHub = $.connection.convertHub;
+        
+        convertHub.logInfo = function(message) {
+            toastr.info(message);
+            console.log(message);
+        };
+
+        convertHub.logError = function (message) {
+            toastr.error(message);
+            console.log(message);
+        };
+        
+        convertHub.logSuccess = function (message) {
+            toastr.success(message, null, 0);
+            console.log(message);
+        };
+        
+        convertHub.logSticky = function (message) {
+            toastr.warning(message, null, 0);
+            console.log(message);
+        };
+
+        $.connection.hub.start(function () {
+            //Join the subscription.
+            convertHub.join(subscriptionId);
+        });
+        
+        
+    });
+</script>
+
+}
