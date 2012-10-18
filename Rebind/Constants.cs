@@ -15,6 +15,7 @@ namespace Rebind
         private readonly String name;
         private readonly String value;
 
+        private static readonly Dictionary<string, OutputExtension> instance = new Dictionary<string, OutputExtension>();
         public static readonly OutputExtension Epub = new OutputExtension("ePub", ".epub");
         public static readonly OutputExtension Html = new OutputExtension("Html", ".html");
         public static readonly OutputExtension Lit = new OutputExtension("Lit", ".lit");
@@ -23,12 +24,13 @@ namespace Rebind
         public static readonly OutputExtension Pdf = new OutputExtension("Pdf", ".pdf");
         public static readonly OutputExtension Rtf = new OutputExtension("Rtf", ".rtf");
         public static readonly OutputExtension Txt = new OutputExtension("Txt", ".txt");
-
+        
 
         private OutputExtension(String name, String value)
         {
             this.name = name;
             this.value = value;
+            instance[value] = this;
         }
 
         public override String ToString()
@@ -39,6 +41,15 @@ namespace Rebind
         public String Value()
         {
             return value;
+        }
+        
+        public static explicit operator OutputExtension(string str)
+        {
+            OutputExtension result;
+            if (instance.TryGetValue(str, out result))
+                return result;
+            else
+                throw new InvalidCastException();
         }
     }
     public sealed class OutputProfile

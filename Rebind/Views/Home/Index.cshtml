@@ -35,7 +35,7 @@
                     <input type="hidden" id="guid" name="Guid" value="@Model.Guid"/>
  
                     <input type="file" placeholder="Select your ebook" name="EbookFile" class="input-text input-large" />
-                    <select name="extension">
+                    <select name="Extension">
                         <option value="@OutputExtension.Epub.Value()">@OutputExtension.Epub.Name()</option>
                         <option value="@OutputExtension.Html.Value()">@OutputExtension.Html.Name()</option>
                         <option value="@OutputExtension.Lit.Value()">@OutputExtension.Lit.Name()</option>
@@ -62,30 +62,46 @@
     <script type="text/javascript">
     $(function () {
         
+        @if(Model.isStarted)
+        {
+            @:toastr.warning('Ebook Conversion Started. Please Wait...', null, { timeOut: 0, extendedTimeOut: 0, tapToDismiss: false });
+        }
         
 
         var subscriptionId = '@Model.Guid';
         var convertHub = $.connection.convertHub;
         
-        convertHub.logInfo = function(message) {
-            toastr.info(message);
-            console.log(message);
+        convertHub.logInfo = function(message, isSticky) {
+            if (isSticky) {
+                toastr.info(message, null, { timeOut: 0 });
+            }
+            else {
+                toastr.info(message);
+            }
+            console.log(message, isSticky);
         };
 
-        convertHub.logError = function (message) {
-            toastr.error(message);
-            console.log(message);
+        convertHub.logError = function (message, isSticky) {
+            if (isSticky) {
+                toastr.error(message, null, { timeOut: 0 });
+            }
+            else {
+                toastr.error(message);
+            }
+            console.log(message, isSticky);
         };
         
-        convertHub.logSuccess = function (message) {
-            toastr.success(message, null, 0);
-            console.log(message);
+        convertHub.logSuccess = function (message, isSticky) {
+            if(isSticky) {
+                toastr.success(message, null, { timeOut: 0, extendedTimeOut: 0 , tapToDismiss : false});
+            }
+            else {
+                toastr.success(message);
+            }
+
+            console.log(message, isSticky);
         };
         
-        convertHub.logSticky = function (message) {
-            toastr.warning(message, null, 0);
-            console.log(message);
-        };
 
         $.connection.hub.start(function () {
             //Join the subscription.

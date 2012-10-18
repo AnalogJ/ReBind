@@ -29,13 +29,13 @@
             },
 
 
-            error = function (message, title, timeOut) {
+            error = function (message, title, optionsOverride) {
 
                 return notify({
                     iconClass: getOptions().iconClasses.error,
                     message: message,
                     title: title
-                }, timeOut)
+                }, optionsOverride)
             },
 
             getContainer = function (options) {
@@ -57,17 +57,21 @@
                 return $.extend({}, defaults, toastr.options)
             },
 
-            info = function (message, title, timeOut) {
+            info = function (message, title, optionsOverride) {
                 return notify({
                     iconClass: getOptions().iconClasses.info,
                     message: message,
                     title: title
-                }, timeOut)
+                }, optionsOverride)
             },
 
-            notify = function (map, timeOut) {
-                var
-                    options = getOptions(),
+            notify = function (map, optionsOverride) {
+                var options = getOptions();
+                if(typeof (optionsOverride) != "undefined") {
+                    options = $.extend({ }, options, optionsOverride);
+                }
+
+                var 
                     iconClass = map.iconClass || options.iconClass,
                     intervalId = null,
                     $container = getContainer(options),
@@ -108,11 +112,8 @@
                     })
                 }
 
-                if (typeof timeOut === 'undefined')
-                    timeOut = options.timeOut;
-
                 var delayedFadeAway = function () {
-                    if (timeOut > 0 || options.extendedTimeOut > 0) {
+                    if (options.timeOut > 0 || options.extendedTimeOut > 0) {
                         intervalId = setTimeout(fadeAway, options.extendedTimeOut)
                     }
                 }
@@ -127,8 +128,8 @@
                 $container.prepend($toastElement)
                 $toastElement.fadeIn(options.fadeIn)
 
-                if (timeOut > 0) {
-                    intervalId = setTimeout(fadeAway, timeOut)
+                if (options.timeOut > 0)  {
+                    intervalId = setTimeout(fadeAway, options.timeOut)
                 }
 
                 $toastElement.hover(stickAround, delayedFadeAway)
@@ -150,20 +151,20 @@
                 return $toastElement
             },
 
-            success = function (message, title, timeOut) {
+            success = function (message, title, optionsOverride) {
                 return notify({
                     iconClass: getOptions().iconClasses.success,
                     message: message,
                     title: title
-                }, timeOut)
+                }, optionsOverride)
             },
 
-            warning = function (message, title, timeOut) {
+            warning = function (message, title, optionsOverride) {
                 return notify({
                     iconClass: getOptions().iconClasses.warning,
                     message: message,
                     title: title
-                }, timeOut)
+                }, optionsOverride)
             }
 
         return {
