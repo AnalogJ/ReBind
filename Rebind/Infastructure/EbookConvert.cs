@@ -57,10 +57,11 @@ namespace Rebind.Infastructure
                     {
                         Convert(saveFile);
                     });
+                    return null;
                 }
                 else
                 {
-                    Convert(saveFile);
+                    return Convert(saveFile);
                 }
                 
             }
@@ -83,6 +84,7 @@ namespace Rebind.Infastructure
                                 
                             };
                         client.DownloadDataAsync(Options.EbookUrl);
+                        return null;
                     }
                     else
                     {
@@ -90,18 +92,18 @@ namespace Rebind.Infastructure
                         client.DownloadFile(Options.EbookUrl, saveFile);
                         ClientLogging(LogLevel.Info, "Downloading File Complete");
                         ClientLogging(LogLevel.Info, "Finished Processing Input Options...");
-                        Convert(saveFile);
+                        return Convert(saveFile);
                     }
                     
                 }
 
             }
             
-            return saveFile;
+            //return saveFile;
         }
 
 
-        private void Convert( String inputFile)
+        private String Convert( String inputFile)
         {
             if(String.IsNullOrEmpty(inputFile))
             {
@@ -135,7 +137,7 @@ namespace Rebind.Infastructure
 
             }
 
-
+            return output;
 
         }
 
